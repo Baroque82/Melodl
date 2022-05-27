@@ -1,0 +1,161 @@
+/* MusicTheoryToneJS.css */
+html {
+    font-size: 10px;
+}
+
+.rightColumn {
+    position: absolute;
+    right: 100px;
+    width: 300px;
+/*    background-color: #b0e0e6; */
+}
+
+.leftColumn {
+    position: absolute;
+    left: 100px;
+    width: 300px;
+/*    background-color: #b0e0e6; */
+
+}
+
+
+.playButton {
+    background-color: #66CC66;
+    border: none;
+    color: white;
+    padding: 2px 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.stopButton {
+    background-color: #CC6666;
+    border: none;
+    color: white;
+    padding: 2px 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+body {
+/*    margin-left: 20px; */
+    width: 80%; 
+    margin: 0 auto; 
+    max-width: 1280px; 
+    min-width: 480px;  
+    background-color: #ffffff;
+    padding: 0 20px 20px 20px; 
+/*    border: 3px solid #007700; */
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+}
+
+.whiteBG {
+    background-color: #ffffff;
+}
+
+#footer {
+    font-size: 1.2em;
+    color: #0000dd;
+}
+
+aside {
+  flex: 1; 
+  box-sizing: border-box;
+  margin-left: 10px;
+  margin-top: 150px;
+  background-color: #e0e0e0;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 10px;
+}
+
+/*
+aside li {
+  padding-bottom: 10px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 10px;
+//  font-size: 1.6em; */
+}
+*/
+
+#Content {
+    margin-left: 20px;
+}
+
+/*
+#content {
+   flex: 3;
+}
+*/
+
+.keyboard {
+    height: 200px; width: 800px;
+    margin-left: 40px;
+}
+
+form {
+    font-size: 1.3em;
+}
+h1 {
+    font-size: 4.5em;
+    text-align: center;
+    color: #dd0000;
+    text-shadow: 1px 2px 3px black;
+}
+h2 {
+    font-size: 2em;
+}
+
+p {
+    font-size: 1.6em;
+    background-color: #f5f5ff;
+/*    border: 1px dotted grey; */
+}
+table {
+/*  font-size: 1.6em; */
+}
+
+ul {
+  font-size: 1.6em;
+}
+
+ol {
+  font-size: 1.6em;
+}
+
+ dl {
+  font-size: 1.6em; 
+ }
+
+code {
+  font-size: 1.3em; 
+}
+a:hover {     
+  background: orange;
+}
+
+/* on  */
+#demo1 {
+    background-color: #ffeeee;
+}
+
+#demo2 {
+    background-color: #eeffee;
+}
+
+/* on  */
+.exampleDemo {
+    background-color: #eeffee;
+}

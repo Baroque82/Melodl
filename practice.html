@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="css/keyboard.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/Tone.js"></script>
+
+    <script type="text/javascript" src="js/StartAudioContext.js"></script>
+    <script src="js/Rhythm.js"></script>
+    <script src="js/ProcessAudio.js"></script>
+    <script src="js/Play.js"></script>
+    <script src="js/audiosynth.js"></script>
+    <script src="js/audiosynth.view.js"></script>
+    <script src="js/Games.js"></script>
+
+</head>
+<body onload="setPractice()">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand">Melodle</a>
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="index.html">Play</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="practice.html">Practice</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+
+            <div class="keyboard-options" style="visibility:hidden;">
+                Sound
+                <select ID="sound">
+                    <option value="0" selected>Keyboard</option>
+                    <option value="1">Organ</option>
+                    <option value="2">Acoustic Guitar</option>
+                </select>
+            </div>
+
+            <div class="keyboard-options"></div>
+
+            <div class="keyboard-options">&nbsp;<span id="lastNotesPlayed" style="font-size:200%;font-weight:bold;"></span></div>
+
+
+            <div ID="keyboard" class="keyboard-holder"></div>
+
+            <div class="keyboard-options" style="visibility:hidden;">
+                Range [C<span ID="OCTAVE_LOWER">3</span>-B<span ID="OCTAVE_UPPER">5</span>]
+                <input type="button" ID="-_OCTAVE" value="-" />
+                <input type="button" ID="+_OCTAVE" value="+" /><br />
+                <i>(Use left/right arrows to adjust with keyboard)</i>
+            </div>
+            <div class="keyboard-options">
+                <img src="sound.gif" id="soundGif" style="width:50px;height:50px;visibility:hidden;" /> &nbsp;&nbsp;
+                <button class="btn btn-sm btn-dark" onclick="playNotesPlayed()"><i class="bi bi-play-fill"></i> Play </button> &nbsp;
+                <button class="btn btn-sm btn-secondary" onclick="stopIt()"><i class="bi bi-stop-fill"></i> Stop </button> &nbsp;
+                <a id="clearNotesPlayed" class="btn btn-sm btn-outline-secondary" onclick="clearNotesPlayed()">Clear</a>
+            </div>
+
+
+
+
+            <script type="text/javascript">
+
+                var a = new AudioSynthView();
+                a.draw();
+
+                function setPractice() {
+                    currPage = "Practice";
+                }
+
+                function playNotesPlayed() {
+                    currPage = "Practice";
+                    if (notesPlayed.length == 0) {
+                        return;
+                    }
+                    var basicRhythm = Array(notesPlayed.length).fill('4n');
+                    var basicTempo = 100;
+                    var currMelody = Rhythm.mergeDurationsAndPitch(basicRhythm, notesPlayed);
+                    //var tempo = 100;
+                    var melodyTime = Math.ceil((currMelody[currMelody.length - 1].time + 0.25) * 1000 * (basicTempo / 60));
+                    var sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+                    var stopAfterTime = async () => {
+                        await sleep(melodyTime)
+                        stopIt();
+                    }
+
+                    document.getElementById('soundGif').style.visibility = 'visible';
+                    //console.log(currMelody);
+                    if (!piano) {
+                        //			piano = new Tone.PolySynth(Tone.Synth, {
+                        piano = new Tone.PolySynth(4, Tone.Synth, {
+                            "volume": -5,
+                            "oscillator": {
+                                "partials": [1, 2, 5],
+                            },
+                            "portamento": 0.006
+                        }).toMaster();
+                        //			}).toDestination();
+                    }
+
+                    var melodyPart = new Tone.Part(function (time, value) {
+                        piano.triggerAttackRelease(value.note, value.duration, time)
+                    }, currMelody).start(0);
+
+                    //TRANSPORT
+                    Tone.Transport.loopStart = "0";
+                    Tone.Transport.loopEnd = "12:0";
+                    Tone.Transport.loop = false;
+                    //	    var tempo = document.myForm.tempo.value;
+                    //var tempo = 100;
+                    Tone.Transport.bpm.value = basicTempo;
+                    stopAfterTime();
+                    Tone.Transport.start("+0.2");
+                    //document.getElementById('soundGif').style.visibility = 'hidden';
+
+                }
+
+
+                function clearNotesPlayed() {
+                    notesPlayed = [];
+                    document.getElementById('lastNotesPlayed').innerText = notesPlayed;
+                    //document.getElementById('lastNotesPlayed').innerText = notesPlayed;
+                }
+
+
+            </script>
+
+            <script>
+            </script>
+        </main>
+    </div>
+
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/site.js"></script>
+    <script src="js/Play.js"></script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="css/keyboard.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/Tone.js"></script>
+
+    <script type="text/javascript" src="js/StartAudioContext.js"></script>
+    <script src="js/Rhythm.js"></script>
+    <script src="js/ProcessAudio.js"></script>
+    <script src="js/Play.js"></script>
+    <script src="js/audiosynth.js"></script>
+    <script src="js/audiosynth.view.js"></script>
+    <script src="js/Games.js"></script>
+
+</head>
+<body onload="populateGameList()">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand">Melodle</a>
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="index.html">Play</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="practice.html">Practice</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+
+            <div class="keyboard-options" style="display:none;">
+                Sound
+                <select ID="sound">
+                    <option value="0" selected>Keyboard</option>
+                    <option value="1">Organ</option>
+                    <option value="2">Acoustic Guitar</option>
+                </select>
+            </div> 
+            <div class="keyboard-options">
+                Game
+                <select id="gameSelect" onchange="changeGame()"></select>
+            </div>
+
+            <div class="keyboard-options">
+                <button class="btn btn-sm btn-dark" onclick="playGamePlayed()"><i class="bi bi-play-fill"></i> Play </button> &nbsp;
+                <button class="btn btn-sm btn-secondary" onclick="stopIt()"><i class="bi bi-stop-fill"></i> Stop </button>
+            </div>
+            <div class="keyboard-options">
+                <img src="sound.gif" id="soundGif" style="width:50px;height:50px;visibility:hidden;" />
+            </div>
+
+
+            <div class="keyboard-options" style="visibility:hidden;">&nbsp;<span id="lastNotesPlayed" style="font-size:200%;font-weight:bold;"></span></div>
+
+
+            <div ID="keyboard" class="keyboard-holder"></div>
+
+            <div class="keyboard-options" style="visibility:hidden;">
+                Range [C<span ID="OCTAVE_LOWER">3</span>-B<span ID="OCTAVE_UPPER">5</span>]
+                <input type="button" ID="-_OCTAVE" value="-" />
+                <input type="button" ID="+_OCTAVE" value="+" /><br />
+                <i>(Use left/right arrows to adjust with keyboard)</i>
+            </div>
+
+            <div id="wrapper">
+                <div class="keyboard-options" id="tries" style="text-align:center;">
+
+                </div>
+            </div>
+
+            <div id="gameEndText" class="keyboard-options">
+
+            </div>
+
+
+            <script type="text/javascript">
+
+                var a = new AudioSynthView();
+                a.draw();
+
+                function changeGame() {
+                    gameNumber = parseInt($('#gameSelect').val()) - 1;
+                    currGame = melodleGames[gameNumber];
+                    gameRhythm = currGame['rhythm'].split(",");
+                    gamePitches = currGame['pitches'].split(",");
+                    gameTempo = currGame['tempo'];
+                    tryNumber = 0;
+                    boxIndex = 0;
+                    document.getElementById('gameEndText').innerHTML = ``;
+                    document.getElementById('tries').innerHTML = ``;
+                    createBoxes();
+                }
+
+                function createBoxes() {
+
+                    var tab = `<table>`;
+                    for (let j = 0; j < maxTries; j++) {
+                        tab += `<tr>`;
+                        for (let i = 0; i < gamePitches.length; i++) {
+                            let boxij = "box" + i + j;
+                            tab += `<td align=center><div class="box center" id="${boxij}">&nbsp;</div></td>`;
+                        }
+                        tab += `</tr>`;
+                    }
+                    tab += `</table>`;
+                    document.getElementById("tries").innerHTML = tab;
+                    //let tryj = "try" + tryNumber;
+                    //let tab = `<tr id="${tryj}">`;
+                    //for (let i = 0; i < gamePitches.length; i++) {
+                    //    let boxi = "box" + i;
+                    //    tab += //`<div class="box center">
+                    //        `<td id="${boxi}">&nbsp;</td>`;
+                    //                        //</div>`;
+                    //}
+                    //tab += `</tr>`;
+                    //document.getElementById("tryTable").innerHTML += tab;
+                }
+
+
+                function playGamePlayed() {
+                    currPage = "Play";
+                    var currMelody = Rhythm.mergeDurationsAndPitch(gameRhythm, gamePitches);
+                    var melodyTime = Math.ceil((currMelody[currMelody.length - 1].time + 0.25) * 1000 * (gameTempo / 60));
+                    var sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+                    var stopAfterTime = async () => {
+                        await sleep(melodyTime)
+                        stopIt();
+                    }
+                    document.getElementById('soundGif').style.visibility = 'visible';
+                    if (!piano) {
+                        piano = new Tone.PolySynth(4, Tone.Synth, {
+                            "volume": -5,
+                            "oscillator": {
+                                "partials": [1, 2, 5],
+                            },
+                            "portamento": 0.006
+                        }).toMaster();
+                    }
+
+                    var melodyPart = new Tone.Part(function (time, value) {
+                        piano.triggerAttackRelease(value.note, value.duration, time)
+                    }, currMelody).start(0);
+
+                    //TRANSPORT
+                    Tone.Transport.loopStart = "0";
+                    Tone.Transport.loopEnd = "12:0";
+                    Tone.Transport.loop = false;
+                    Tone.Transport.bpm.value = gameTempo;
+                    stopAfterTime();
+                    Tone.Transport.start("+0.2");
+                }
+
+
+
+            </script>
+
+            <script>
+            </script>
+        </main>
+    </div>
+
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/site.js"></script>
+    <script src="js/Play.js"></script>
+</body>
+</html>
