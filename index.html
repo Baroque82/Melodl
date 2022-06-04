@@ -51,7 +51,10 @@
                     <option value="1">Organ</option>
                     <option value="2">Acoustic Guitar</option>
                 </select>
-            </div> 
+            </div>
+
+            <div id="composerText" class="keyboard-options"></div>
+
             <div class="keyboard-options">
                 Game
                 <select id="gameSelect" onchange="changeGame()"></select>
@@ -68,6 +71,7 @@
 
             <div class="keyboard-options" style="visibility:hidden;">&nbsp;<span id="lastNotesPlayed" style="font-size:200%;font-weight:bold;"></span></div>
 
+            <div class="keyboard-options"><span id="keyText" style="font-size:200%;font-weight:bold;"></span></div>
 
             <div ID="keyboard" class="keyboard-holder"></div>
 
@@ -85,7 +89,7 @@
             </div>
 
             <div id="gameEndText" class="keyboard-options">
-                    Try to play the melody!
+
             </div>
 
 
@@ -102,6 +106,8 @@
                     gameTempo = currGame['tempo'];
                     tryNumber = 0;
                     boxIndex = 0;
+                    document.getElementById('composerText').innerText = `Composer: ${currGame['composer']}, Uploader: ${currGame['uploader']}`;
+                    document.getElementById('keyText').innerText = `Key of ${currGame['key']}`;
                     document.getElementById('gameEndText').innerHTML = ``;
                     document.getElementById('tries').innerHTML = ``;
                     createBoxes();
