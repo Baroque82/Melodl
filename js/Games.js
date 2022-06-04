@@ -7,7 +7,8 @@ var melodleGames = [
         "tempo": 100,
         "composer": "Beethoven",
         "uploader": "Baroque82",
-        "date": "2022-05-26"
+        "date": "2022-05-26",
+        "key": "C"
     },
     {
         "id": "2",
@@ -16,7 +17,8 @@ var melodleGames = [
         "tempo": 100,
         "composer": "Traditional",
         "uploader": "Baroque82",
-        "date": "2022-05-27"
+        "date": "2022-05-27",
+        "key": "C"
     },
     {
         "id": "3",
@@ -25,7 +27,8 @@ var melodleGames = [
         "tempo": 100,
         "composer": "Mozart",
         "uploader": "Baroque82",
-        "date": "2022-05-28"
+        "date": "2022-05-28",
+        "key": "C"
     },
     {
         "id": "4",
@@ -34,9 +37,49 @@ var melodleGames = [
         "tempo": 120,
         "composer": "Elfman",
         "uploader": "Baroque82",
-        "date": "2022-05-29"
+        "date": "2022-05-29",
+        "key": "G"
+    },
+    {
+        "id": "5",
+        "pitches": "C4,E4,F4,G4,C4,E4,F4,G4",
+        "rhythm": "4n,4n,4n,1n+4n,4n,4n,4n,1n+4n",
+        "tempo": 120,
+        "composer": "Traditional",
+        "uploader": "Baroque82",
+        "date": "2022-05-30",
+        "key": "C"
+    },
+    {
+        "id": "6",
+        "pitches": "G4,A4,G4,F4,E4,F4,G4",
+        "rhythm": "4n+8n,8n,4n,4n,4n,4n,2n",
+        "tempo": 120,
+        "composer": "Traditional",
+        "uploader": "Piemaster77",
+        "date": "2022-05-31",
+        "key": "C"
+    },
+    {
+        "id": "7",
+        "pitches": "G4,G4,G4,D#4,F4,F4,F4,D4",
+        "rhythm": "8n,8n,8n,2n,8n,8n,8n,2n",
+        "tempo": 120,
+        "composer": "Beethoven",
+        "uploader": "Piemaster77",
+        "date": "2022-06-01",
+        "key": "Eb"
+    },
+    {
+        "id": "8",
+        "pitches": "G4,B4,D5,G5,A4,F#5,G5,G4,G4",
+        "rhythm": "8n,8n,8n,8n,8n,8n,4n,4n,4n",
+        "tempo": 120,
+        "composer": "Bach",
+        "uploader": "Piemaster77",
+        "date": "2022-06-02",
+        "key": "G"
     }
-
 ]
 
 var gameList = {};
